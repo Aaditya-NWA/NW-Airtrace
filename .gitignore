@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+
+# Build / Packaging
+build/
+dist/
+*.egg-info/
+
+# PyInstaller
+# Keep this commented if you want to version-control the spec file
+# *.spec
+
+# IDEs
+.vscode/
+.idea/
+
+# Test / Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+
+# Logs
+*.log
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Runtime Generated Files
+temp/
+tmp/
+cache/
+generated/
+exports/
+reports/
+
+# Environment Variables
+.env
+.env.*
+
+# Local Databases
+*.db
+*.sqlite3
