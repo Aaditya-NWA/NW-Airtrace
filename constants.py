@@ -1,5 +1,5 @@
 """
-constants.py — Colour palette, typography, and platform font detection for NW AirTrace.
+constants.py — Colour palette, typography, and platform font detection for NW Airtrace.
 All UI colour and font values live here so every module imports from one source.
 """
 

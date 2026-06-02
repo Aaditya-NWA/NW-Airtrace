@@ -1,5 +1,5 @@
 """
-ui/dialogs.py — Modal dialog windows for NW AirTrace.
+ui/dialogs.py — Modal dialog windows for NW Airtrace.
 
 Provides:
   show_density_dialog(app)    — slider for auto-plot point density

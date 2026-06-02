@@ -1,5 +1,5 @@
 """
-ui/menubar.py — Builds the top menubar for NW AirTrace.
+ui/menubar.py — Builds the top menubar for NW Airtrace.
 
 Provides _build_menubar and _make_menu_btn which are mixed into ShapePlotter via app.py.
 """
@@ -24,20 +24,6 @@ def build_menubar(app, parent=None):
         relx=0, rely=1.0, relwidth=1.0, anchor="sw"
     )  # draws a 1px bottom border separating the bar from canvas content
 
-    # App wordmark / logo in menubar
-    wm = tk.Frame(bar, bg=MENU_BG)                          # container for logo badge + app name
-    wm.pack(side=tk.LEFT)
-    logo = tk.Frame(wm, bg=ACCENT, width=22, height=22)     # small coloured square acting as logo badge
-    logo.pack(side=tk.LEFT, padx=(14, 6), pady=7)
-    logo.pack_propagate(False)
-    tk.Label(logo, text="✈", bg=ACCENT, fg=PANEL,
-             font=(FONT_UI, 9)).place(relx=0.5, rely=0.5, anchor=tk.CENTER)  # plane icon centred in badge
-    tk.Label(wm, text="NW AirTrace", bg=MENU_BG, fg=TEXT,
-             font=(FONT_UI, 10, "bold")).pack(side=tk.LEFT)  # application name next to logo
-
-    tk.Frame(bar, bg=SEP_CLR, width=1).pack(
-        side=tk.LEFT, fill=tk.Y, pady=8, padx=8
-    )  # vertical divider separating the wordmark from the menu items
 
     # Menu definitions — label mapped to list of (display name, callback) pairs
     menus = [

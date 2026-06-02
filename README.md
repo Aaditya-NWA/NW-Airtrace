@@ -1,4 +1,4 @@
-# NW AirTrace — Airfoil Coordinate Plotter
+# NW Airtrace — Airfoil Coordinate Plotter
 
 A desktop application for digitising airfoil coordinates from images and exporting them to CSV or SolidWorks-ready XYZ curve files.
 
@@ -17,7 +17,7 @@ A desktop application for digitising airfoil coordinates from images and exporti
 
 ```bash
 # 1. Clone or extract the project
-cd NWAirTrace
+cd NW Airtrace
 
 # 2. (Recommended) Create a virtual environment
 python -m venv .venv
@@ -47,7 +47,7 @@ python main.py
 ## Project Structure
 
 ```
-NWAirTrace/
+NW Airtrace/
 ├── main.py             Entry point — creates and runs ShapePlotter
 ├── app.py              ShapePlotter class, __init__, _build_ui, state variables
 ├── constants.py        Colour palette, font constants, platform font detection
@@ -78,21 +78,21 @@ pip install pyinstaller
 
 ### Step 2 — Run PyInstaller
 
-From inside the `NWAirTrace/` directory:
+From inside the `NW Airtrace/` directory:
 
 **Windows**
 ```bash
-pyinstaller --onefile --windowed --name "NWAirTrace" --icon assets/icon.ico main.py
+pyinstaller --onefile --windowed --name "NW Airtrace" --icon assets/iconNW.png main.py
 ```
 
 **macOS**
 ```bash
-pyinstaller --onefile --windowed --name "NWAirTrace" --icon assets/icon.icns main.py
+pyinstaller --onefile --windowed --name "NW Airtrace" --icon assets/iconNW.png main.py
 ```
 
 **Linux**
 ```bash
-pyinstaller --onefile --name "NWAirTrace" main.py
+pyinstaller --onefile --name "NW Airtrace" main.py
 ```
 
 Flag explanations:
@@ -109,10 +109,10 @@ Flag explanations:
 PyInstaller writes output into two folders it creates:
 
 ```
-NWAirTrace/
+NW Airtrace/
 ├── build/      ← intermediate build artefacts (can be deleted)
 └── dist/
-    └── NWAirTrace      ← your final executable (or NWAirTrace.exe on Windows)
+    └── NW Airtrace      ← your final executable (or NW Airtrace.exe on Windows)
 ```
 
 The file inside `dist/` is fully self-contained and can be distributed without Python installed.
@@ -129,7 +129,7 @@ macOS will block unsigned executables downloaded from the internet. To allow use
 - Sign it with an Apple Developer certificate:
 
 ```bash
-codesign --deep --force --sign "Developer ID Application: Your Name (TEAMID)" dist/NWAirTrace.app
+codesign --deep --force --sign "Developer ID Application: Your Name (TEAMID)" dist/NW Airtrace.app
 ```
 
 ### Troubleshooting common PyInstaller issues
@@ -137,7 +137,7 @@ codesign --deep --force --sign "Developer ID Application: Your Name (TEAMID)" di
 **Hidden imports** — if the app crashes at launch with an `ImportError`, add the missing module explicitly:
 
 ```bash
-pyinstaller --onefile --windowed --hidden-import=scipy.interpolate --name "NWAirTrace" main.py
+pyinstaller --onefile --windowed --hidden-import=scipy.interpolate --name "NW Airtrace" main.py
 ```
 
 **`cv2` not found** — OpenCV sometimes needs an explicit hidden import:

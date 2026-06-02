@@ -1,11 +1,16 @@
 """
-ui/sidebar.py — Builds the collapsible left sidebar for NW AirTrace.
+ui/sidebar.py — Builds the collapsible left sidebar for NW Airtrace.
 
 Contains the canvas controls section, zoom slider, coordinates table,
 copy button, calibration status row, and sidebar toggle logic.
 Called once from ShapePlotter._build_ui via build_sidebar(app).
+
+Logo loading: loaded from assets/iconNW.png relative to the package root.
+The loader scales it to 28×28 and falls back to the ✈ text badge
+if the file is missing or cannot be read.
 """
 
+import os
 import tkinter as tk
 from tkinter import ttk
 
@@ -13,6 +18,28 @@ from constants import (
     SIDEBAR, SIDEBAR2, ACCENT, ACCENT2, GREEN, YELLOW, PURPLE,
     PANEL, TEXT_SIDE, TEXT_SIDE_DIM, SEP_DARK, FONT_UI, FONT_MONO
 )
+
+# Resolve the assets directory relative to this file so paths survive PyInstaller packaging
+_ASSETS_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "assets")
+_LOGO_PATH  = os.path.join(_ASSETS_DIR, "iconNW.png")  # logo image used in the sidebar header badge
+
+
+def _load_logo(size=28):
+    """
+    Attempts to load assets/logo.png and return a Tkinter PhotoImage scaled to *size*×*size*.
+    Returns None if the file is missing or Pillow cannot open it, so the caller
+    can fall back to the text badge without crashing.
+    """
+    if not os.path.isfile(_LOGO_PATH):
+        return None  # logo file not present yet — caller will use the text fallback
+    try:
+        from PIL import Image, ImageTk
+        img = Image.open(_LOGO_PATH).convert("RGBA")  # converts to RGBA so transparency is preserved
+        img = img.resize((size, size), Image.LANCZOS)  # scales to exact badge size with high-quality resampling
+        return ImageTk.PhotoImage(img)  # wraps in a Tkinter-compatible image object
+    except Exception:
+        return None  # silently falls back if Pillow fails for any reason (corrupt file, wrong format, etc.)
+
 
 def build_sidebar(app):
     """
@@ -22,6 +49,7 @@ def build_sidebar(app):
     """
     app._sidebar_visible = True  # tracks whether the full sidebar is currently shown
 
+    # Collapsed stub: 36px strip that stays visible when sidebar is hidden
     app._sidebar_stub = tk.Frame(app, bg=SIDEBAR, width=36)   # narrow strip replacing the sidebar when collapsed
     app._sidebar_stub.pack(side=tk.LEFT, fill=tk.Y)
     app._sidebar_stub.pack_propagate(False)
@@ -33,6 +61,7 @@ def build_sidebar(app):
     app._stub_expand_btn.bind("<Button-1>", lambda e: toggle_sidebar(app))
     app._sidebar_stub.pack_forget()  # hidden on launch because the full sidebar is open
 
+    # Full sidebar outer frame
     app._sidebar_outer = tk.Frame(app, bg=SIDEBAR, width=268)   # fixed-width dark panel on the left
     app._sidebar_outer.pack(side=tk.LEFT, fill=tk.Y)
     app._sidebar_outer.pack_propagate(False)
@@ -73,20 +102,31 @@ def build_sidebar(app):
         w.bind("<Button-4>",   _scroll)   # Linux scroll-up
         w.bind("<Button-5>",   _scroll)   # Linux scroll-down
 
+    # Sidebar header: logo badge + app name + collapse button
     hdr = tk.Frame(app.left, bg=SIDEBAR)
     hdr.pack(fill=tk.X)
     title_row = tk.Frame(hdr, bg=SIDEBAR)
     title_row.pack(fill=tk.X, padx=14, pady=(20, 14))
 
-    logo_badge = tk.Frame(title_row, bg=ACCENT, width=28, height=28)  # small indigo square as logo in the header
+    # Try to load the PNG logo; fall back to the ✈ text badge if unavailable
+    logo_image = _load_logo(size=28)  # returns a PhotoImage or None
+
+    logo_badge = tk.Frame(title_row, bg=ACCENT, width=28, height=28)  # indigo square container for the logo
     logo_badge.pack(side=tk.LEFT)
     logo_badge.pack_propagate(False)
-    tk.Label(logo_badge, text="✈", bg=ACCENT, fg=PANEL,
-             font=(FONT_UI, 11)).place(relx=0.5, rely=0.5, anchor=tk.CENTER)  # plane icon centred in logo badge
+
+    if logo_image:
+        # Keep a reference on app so Tkinter's GC doesn't destroy the image
+        app._logo_image = logo_image  # must be stored on app (not a local var) or Tkinter drops it immediately
+        tk.Label(logo_badge, image=logo_image, bg=ACCENT,
+                 bd=0, highlightthickness=0).place(relx=0.5, rely=0.5, anchor=tk.CENTER)  # PNG logo centred in badge
+    else:
+        tk.Label(logo_badge, text="✈", bg=ACCENT, fg=PANEL,
+                 font=(FONT_UI, 11)).place(relx=0.5, rely=0.5, anchor=tk.CENTER)  # fallback plane icon when no logo file found
 
     name_col = tk.Frame(title_row, bg=SIDEBAR)
     name_col.pack(side=tk.LEFT, padx=(10, 0))
-    tk.Label(name_col, text="NW AirTrace", bg=SIDEBAR, fg=TEXT_SIDE,
+    tk.Label(name_col, text="NW Airtrace", bg=SIDEBAR, fg=TEXT_SIDE,
              font=(FONT_UI, 12, "bold")).pack(anchor=tk.W)   # application name in sidebar header
     tk.Label(name_col, text="Airfoil Plotter", bg=SIDEBAR, fg=TEXT_SIDE_DIM,
              font=(FONT_UI, 8)).pack(anchor=tk.W)            # subtitle below the app name
@@ -102,6 +142,7 @@ def build_sidebar(app):
 
     tk.Frame(app.left, bg=SEP_DARK, height=1).pack(fill=tk.X)  # separator line below the header
 
+    # Canvas section
     _section(app.left, "CANVAS")
     cc = tk.Frame(app.left, bg=SIDEBAR)
     cc.pack(fill=tk.X, padx=14, pady=(2, 10))
@@ -143,6 +184,7 @@ def build_sidebar(app):
 
     tk.Frame(app.left, bg=SEP_DARK, height=1).pack(fill=tk.X)  # separator between canvas and coordinates sections
 
+    # Coordinates section
     _section(app.left, "COORDINATES")
 
     cnt_row = tk.Frame(app.left, bg=SIDEBAR)
@@ -200,6 +242,7 @@ def build_sidebar(app):
 
     tk.Frame(app.left, bg=SEP_DARK, height=1).pack(fill=tk.X)  # separator before the calibration section
 
+    # Calibration section
     _section(app.left, "CALIBRATION")
 
     cal_row = tk.Frame(app.left, bg=SIDEBAR2)
@@ -212,6 +255,7 @@ def build_sidebar(app):
     app.angle_lbl = tk.Label(cal_row, text="", bg=SIDEBAR2, fg=PURPLE, font=(FONT_UI, 8))
     app.angle_lbl.pack(padx=10, pady=(0, 6), anchor=tk.W)  # shows rotation angle after Rotate to 0° is applied
 
+
 def toggle_sidebar(app):
     """Collapses the full sidebar to a stub strip, or expands it back."""
     if app._sidebar_visible:
@@ -223,12 +267,14 @@ def toggle_sidebar(app):
         app._sidebar_outer.pack(side=tk.LEFT, fill=tk.Y, before=app.canvas.master)  # restore full sidebar
         app._sidebar_visible = True
 
+
 def _section(parent, title):
     """Renders a small all-caps section heading inside the sidebar."""
     f = tk.Frame(parent, bg=SIDEBAR)
     f.pack(fill=tk.X, pady=(16, 4))
     tk.Label(f, text=title.upper(), bg=SIDEBAR, fg=TEXT_SIDE_DIM,
              font=(FONT_UI, 7, "bold"), padx=14).pack(anchor=tk.W)  # all-caps section label used as a visual separator
+
 
 def _mkcheck(parent, text, var, cmd, color=ACCENT):
     """Creates a styled Checkbutton for the dark sidebar."""
@@ -238,6 +284,7 @@ def _mkcheck(parent, text, var, cmd, color=ACCENT):
         activebackground=SIDEBAR, activeforeground=ACCENT,
         font=(FONT_UI, 10), cursor="hand2", highlightthickness=0
     )  # dark-themed checkbox used for toggle options in the sidebar
+
 
 def _mkbtn(parent, text, cmd, color=ACCENT):
     """Creates a styled full-width Button for the dark sidebar."""

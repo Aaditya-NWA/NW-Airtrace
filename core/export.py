@@ -1,5 +1,5 @@
 """
-core/export.py — All data export and import operations for NW AirTrace.
+core/export.py — All data export and import operations for NW Airtrace.
 
 Provides:
   export_csv(app)              — saves coordinates to a standard CSV file

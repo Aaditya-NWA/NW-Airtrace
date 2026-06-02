@@ -1,5 +1,5 @@
 """
-app.py — ShapePlotter: the root Tk window for NW AirTrace.
+app.py — ShapePlotter: the root Tk window for NW Airtrace.
 
 Owns all application state, builds the UI by delegating to ui/ modules,
 and exposes thin wrapper methods so Tkinter callbacks (which bind to self.*)
@@ -76,7 +76,7 @@ from core.canvas import (
 
 class ShapePlotter(tk.Tk):
     """
-    Root application window for NW AirTrace — Airfoil Coordinate Plotter.
+    Root application window for NW Airtrace — Airfoil Coordinate Plotter.
 
     All mutable application state lives here as instance attributes.
     UI construction is delegated to ui/ modules; all interaction logic
@@ -85,7 +85,7 @@ class ShapePlotter(tk.Tk):
 
     def __init__(self):
         super().__init__()
-        self.title("NW AirTrace  —  Airfoil Coordinate Plotter")  # sets the window title shown in the OS taskbar
+        self.title("NW Airtrace  —  Airfoil Coordinate Plotter")  # sets the window title shown in the OS taskbar
         self.configure(bg=BG)
         self.minsize(1100, 680)  # prevents the window from being resized smaller than a usable layout
 

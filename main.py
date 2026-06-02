@@ -1,5 +1,5 @@
 """
-main.py — Entry point for NW AirTrace.
+main.py — Entry point for NW Airtrace.
 
 Run:  python main.py
 Packages required: pip install pillow opencv-python-headless numpy

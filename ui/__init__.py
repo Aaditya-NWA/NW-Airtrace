@@ -1,1 +1,1 @@
-# ui package — sidebar, menubar, and dialog components for NW AirTrace
+# ui package — sidebar, menubar, and dialog components for NW Airtrace

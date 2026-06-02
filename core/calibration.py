@@ -1,5 +1,5 @@
 """
-core/calibration.py — Calibration logic and coordinate-transform methods for NW AirTrace.
+core/calibration.py — Calibration logic and coordinate-transform methods for NW Airtrace.
 
 Provides:
   auto_calibrate(app)            — detects LE/TE endpoints and sets transform automatically
