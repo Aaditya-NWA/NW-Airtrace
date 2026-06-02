@@ -84,6 +84,11 @@ From inside the `NW Airtrace/` directory:
 ```bash
 pyinstaller --onefile --windowed --name "NW Airtrace" --icon assets/iconNW.png main.py
 ```
+or 
+
+```bash
+pyinstaller "NW Airtrace.spec"
+```
 
 **macOS**
 ```bash

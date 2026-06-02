@@ -19,9 +19,18 @@ from constants import (
     PANEL, TEXT_SIDE, TEXT_SIDE_DIM, SEP_DARK, FONT_UI, FONT_MONO
 )
 
-# Resolve the assets directory relative to this file so paths survive PyInstaller packaging
-_ASSETS_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "assets")
-_LOGO_PATH  = os.path.join(_ASSETS_DIR, "iconNW.png")  # logo image used in the sidebar header badge
+def _assets_dir():
+    """
+    Returns the correct assets/ path whether running from source or inside a
+    PyInstaller bundle. PyInstaller extracts bundled files to sys._MEIPASS at
+    runtime; outside a bundle we resolve relative to this file as normal.
+    """
+    import sys
+    if hasattr(sys, "_MEIPASS"):
+        return os.path.join(sys._MEIPASS, "assets")  # PyInstaller unpacks datas here at runtime
+    return os.path.join(os.path.dirname(os.path.dirname(__file__)), "assets")  # normal source run
+
+_LOGO_PATH = os.path.join(_assets_dir(), "iconNW.png")  # logo image used in the sidebar header badge
 
 
 def _load_logo(size=28):
